@@ -73,7 +73,7 @@ function loginUser(req,res){
                     message:"logged in Successfully!",
                     status:"SUCCESS",
                     user:{
-                        UserRole:user.name === 'admin'? 'ADMIN' : 'CUSTOMER',
+                        UserRole:(user.name === 'admin' || user.name === 'Admin')? 'ADMIN' : 'CUSTOMER',
                         email:user.email,
                         id:user.id,
                         password:user.password,
