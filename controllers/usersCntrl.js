@@ -1,9 +1,9 @@
-const User = require('../models/User');
 const Users = require('../models/User');
 
 module.exports = {
     registerUser:registerUser,
-    loginUser:loginUser
+    loginUser:loginUser,
+    upDateUser:upDateUser
 }
 
 function registerUser(req,res){
@@ -12,7 +12,12 @@ function registerUser(req,res){
             const user = new Users({
                 name: req.body.name,
                 email: req.body.email,
-                password: req.body.password
+                password: req.body.password,
+                bio:'',
+                city:'',
+                state:'',
+                avatar:'',
+
             })
             let existingEmail = await Users.findOne({ email: req.body.email, name: req.body.name });
             if(existingEmail){
@@ -51,7 +56,7 @@ function registerUser(req,res){
 function loginUser(req,res){
     async function loginUser() {
         try{
-            const user = await User.findOne({email:req.body.email});
+            const user = await Users.findOne({email:req.body.email});
             if(!user){
                 res.json({
                     data: null,
@@ -72,7 +77,11 @@ function loginUser(req,res){
                         email:user.email,
                         id:user.id,
                         password:user.password,
-                        name:user.name
+                        name:user.name,
+                        bio:user.bio,
+                        city:user.city,
+                        state:user.state,
+                        avatar:user.avatar
                     }
                 })
             }
@@ -84,5 +93,41 @@ function loginUser(req,res){
             })
         }
     }loginUser().then(function(){})
+
+}
+
+function upDateUser(req,res){
+    async function upDateUser(){
+        try{
+            const user = await Users.findByIdAndUpdate(req.params.id, {
+                $set: req.body
+            })
+            if(user){
+                res.json({
+                    code: 200,
+                    data: user,
+                    message: 'Account has been updated !!'
+                })
+            }else{
+                res.json({
+                    code: 200,
+                    data: null,
+                    message: 'Account has not found.'
+                })
+            }
+        }catch(err){
+            res.json({
+                code: 400,
+                data: null,
+                message: 'Exception error occurred'
+            })
+        }
+    }upDateUser().then(function(){}).catch(err=>{
+        res.json({
+            code: 500,
+            data: null,
+            message: 'Internal server error'
+        });
+    })
 
 }

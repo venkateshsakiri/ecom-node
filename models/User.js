@@ -5,6 +5,18 @@ const users = new mongoose.Schema({
         type: String,
         unique: true
     },
+    bio: {
+        type: String,
+    },
+    city: {
+        type: String,
+    },
+    state: {
+        type: String,
+    },
+    avatar:{
+        type:String
+    },
     email: {
         type: String,
         required: true,
