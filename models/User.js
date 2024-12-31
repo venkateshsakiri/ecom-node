@@ -27,6 +27,9 @@ const users = new mongoose.Schema({
         required: true,
         min: 6
     },
+    status: {
+        type: String,
+    },
 },{timestamps:true})
 
 module.exports =mongoose.model('Users',users);

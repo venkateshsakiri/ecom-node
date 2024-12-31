@@ -16,6 +16,7 @@ routes.post('/user/get-entitlements',entitlementCntrl.getEntitlements);
 
 routes.post('/admin/category',categoryCntrl.addCategory);
 routes.get('/admin/category',categoryCntrl.getCategory);
+routes.get('/admin/customers-list',usersCntrl.getAllUsers);
 
 routes.post('/admin/product',productCntrl.postProducts);
 routes.post('/admin/product-details',productDetailsCntrl.addProductDetails);

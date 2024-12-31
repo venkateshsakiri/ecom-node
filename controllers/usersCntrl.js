@@ -3,7 +3,8 @@ const Users = require('../models/User');
 module.exports = {
     registerUser:registerUser,
     loginUser:loginUser,
-    upDateUser:upDateUser
+    upDateUser:upDateUser,
+    getAllUsers:getAllUsers
 }
 
 function registerUser(req,res){
@@ -17,6 +18,7 @@ function registerUser(req,res){
                 city:'',
                 state:'',
                 avatar:'',
+                status:'N'
 
             })
             let existingEmail = await Users.findOne({ email: req.body.email, name: req.body.name });
@@ -62,12 +64,18 @@ function loginUser(req,res){
                     data: null,
                     message: 'user not found'
                 })
-            }else if(user.password !== req.body.password){
+            }else if(user.status === 'N'){
+                res.json({
+                    data: null,
+                    message: 'Pending from Admin Approval'
+                })
+            }
+            else if(user.password !== req.body.password){
                 res.json({
                     data: null,
                     message: 'password incorrect'
                 })
-            }else{
+            }else if((user.password === req.body.password) && (user.status === 'Y')){
                 res.json({
                     applicationType:'CHAT',
                     message:"logged in Successfully!",
@@ -130,4 +138,32 @@ function upDateUser(req,res){
         });
     })
 
+}
+
+function getAllUsers(req,res){
+    async function getAllUsers(){
+        try{
+            const users = await Users.find({});
+            if(users){
+                res.json({
+                    code:200,
+                    data:users,
+                    message:'customers fetched successfully!!'
+                })
+            }
+
+        }catch(err){
+            res.json({
+                code: 400,
+                data: null,
+                message: 'Exception error occurred'
+            })
+        }
+    }getAllUsers().then(function(){}).catch(err=>{
+        res.json({
+            code: 500,
+            data: null,
+            message: 'Internal server error'
+        });
+    })
 }
