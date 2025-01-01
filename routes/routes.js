@@ -23,10 +23,12 @@ routes.post('/admin/product',productCntrl.postProducts);
 routes.post('/admin/coupons',couponsCntrl.postCoupons);
 routes.get('/admin/coupons',couponsCntrl.getAllCoupons);
 routes.post('/admin/product-details',productDetailsCntrl.addProductDetails);
+routes.get('/customer/coupon/:id',couponsCntrl.getCouponsByCode);
 routes.get('/customer/product',productCntrl.getAllProducts);
 routes.get('/customer/product/:id',productDetailsCntrl.getProductDetailsById);
 routes.post('/customer/product/cart',addCartCntrl.addToCart);
 routes.get('/customer/product/cart/:id',addCartCntrl.getAllCartItems);
+routes.delete('/customer/product/cart/:id',addCartCntrl.deleteCartItem);
 
 
 

@@ -4,7 +4,8 @@ const User = require('../models/User');
 
 module.exports = {
     addToCart:addToCart,
-    getAllCartItems:getAllCartItems
+    getAllCartItems:getAllCartItems,
+    deleteCartItem:deleteCartItem
 }
 
 function addToCart(req,res){
@@ -91,6 +92,41 @@ function getAllCartItems(req,res){
             });
         }
     }getAllCartItems().then(function(){}).catch(err=>{
+        res.json({
+            code: 500,
+            data: null,
+            message: "Internal server error",
+          });
+    })
+}
+
+
+function deleteCartItem(req,res){
+    async function deleteCartItem(){
+        try{
+            const isExistProduct = await addCart.findByIdAndDelete(req.params.id);
+            if(isExistProduct){
+                res.json({
+                    code:200,
+                    data:'',
+                    message:'Product deleted successfully!'
+                })
+            }else{
+                res.json({
+                    code:200,
+                    data:'',
+                    message:'User Id not found !'
+                })
+            }
+        }catch (err) {
+            console.log(err)
+            res.json({
+                code: 400,
+                data: null,
+                message: "Exception error occurred",
+            });
+        }
+    }deleteCartItem().then(function(){}).catch(err=>{
         res.json({
             code: 500,
             data: null,
