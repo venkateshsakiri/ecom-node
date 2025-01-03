@@ -9,6 +9,8 @@ const addCartCntrl = require('../controllers/addCartCntrl');
 const couponsCntrl = require('../controllers/couponsCntrl');
 const addressCntrl = require('../controllers/addressCntrl');
 
+const messageCntrl = require('../controllers/messageCntrl');
+
 routes.post('/auth/register',usersCntrl.registerUser);
 routes.put('/auth/update/:id',usersCntrl.upDateUser);
 routes.post('/auth/login',usersCntrl.loginUser);
@@ -31,6 +33,11 @@ routes.post('/customer/product/cart',addCartCntrl.addToCart);
 routes.get('/customer/product/cart/:id',addCartCntrl.getAllCartItems);
 routes.delete('/customer/product/cart/:id',addCartCntrl.deleteCartItem);
 routes.post('/customer/address',addressCntrl.postAddress);
+
+
+
+routes.post('/chat/:id',messageCntrl.getMessages);
+routes.post('/chat/send/:id',messageCntrl.sendMessages);
 
 
 
