@@ -59,6 +59,8 @@ mongoose.connection.once('open', () => {
 
 // Define userSocketMap to store user IDs and their corresponding socket IDs
 const userSocketMap = {};
+const onlineUsers = [];
+const unreadMessages = [];
 
 io.on('connection', (socket) => {
   console.log('A user connected');
@@ -74,8 +76,12 @@ io.on('connection', (socket) => {
 
     // Store the new socket ID with the user ID
     userSocketMap[userId] = socket.id;
+    onlineUsers.push(userId);
+    unreadMessages.push({senderId:userId,receiverId:'',count:0});
     console.log(`User ${userId} connected with socket ID: ${socket.id}`);
     console.log('Current userSocketMap:', userSocketMap); // Log the current state of userSocketMap
+    console.log('Online users:', onlineUsers);
+    io.emit('updateUserStatus', onlineUsers);
   });
 
   socket.on('sendMessage', async (data) => {
@@ -84,6 +90,12 @@ io.on('connection', (socket) => {
             socket.emit('receiveMessage', response); // Emit to the sender
             if (userSocketMap[data.selectedUser._id]) {
                 io.to(userSocketMap[data.selectedUser._id]).emit('receiveMessage', response); // Emit to the intended recipient
+                unreadMessages.forEach((ele)=>{
+                  ele.receiverId = data.selectedUser._id
+                  ele.count+=1
+                })
+                // unreadMessages[data.selectedUser._id] = (unreadMessages[data.selectedUser._id] || 0) + 1;
+                io.to(userSocketMap[data.selectedUser._id]).emit('updateUnreadCount', unreadMessages);
             } else {
                 console.log('Recipient not connected');
             }
@@ -93,16 +105,34 @@ io.on('connection', (socket) => {
     }
   });
 
+  socket.on('openChat', (userId) => {
+    // Reset unread messages count when the user opens the chat
+    // unreadMessages[userId] = 0;
+    unreadMessages.forEach(ele=>{
+      if(ele.senderId === userId){
+        ele.count = 0
+      }
+    })
+    console.log(`Unread messages reset for user ${unreadMessages}`);
+    // Notify the client to update the UI
+    io.to(socket.id).emit('updateUnreadCount', unreadMessages);
+  });
+
   socket.on('disconnect', () => {
     console.log('User disconnected:', socket.id);
     // Remove the user's socket ID from the map
     for (const userId in userSocketMap) {
         if (userSocketMap[userId] === socket.id) {
             delete userSocketMap[userId];
+            const index = onlineUsers.indexOf(userId);
+            if (index !== -1) {
+                onlineUsers.splice(index, 1); // Remove the element at the found index
+            }
             console.log(`User ${userId} removed from userSocketMap`);
             break;
         }
     }
+    io.emit('updateUserStatus', onlineUsers);
   });
 });
 
