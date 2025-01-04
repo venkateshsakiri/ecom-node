@@ -37,7 +37,7 @@ routes.post('/customer/address',addressCntrl.postAddress);
 
 
 routes.post('/chat/:id',messageCntrl.getMessages);
-routes.post('/chat/send/:id',messageCntrl.sendMessages);
+// routes.post('/chat/send/:id',messageCntrl.sendMessages);
 
 
 
