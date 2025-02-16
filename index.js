@@ -16,6 +16,7 @@ app.use(cors({
         'http://localhost:4200',
         'https://sakiri.netlify.app',
         'https://sakiri1.netlify.app',
+        'https://vividmart.netlify.app',
     ],
     credentials: true
 }));
@@ -129,6 +130,19 @@ io.on('connection', (socket) => {
                 onlineUsers.splice(index, 1); // Remove the element at the found index
             }
             console.log(`User ${userId} removed from userSocketMap`);
+            break;
+        }
+    }
+    io.emit('updateUserStatus', onlineUsers);
+  });
+  socket.on('logout', (currentId) => {
+    console.log('User logout:',currentId);
+    // Remove the user's socket ID from the map
+    console.log(userSocketMap)
+    for (const userId in userSocketMap) {
+        if (userSocketMap[userId] === currentId) {
+            delete userSocketMap[userId];
+            console.log(`User ${userSocketMap} removed from userSocketMap`);
             break;
         }
     }
