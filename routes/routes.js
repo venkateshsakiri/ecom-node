@@ -23,6 +23,7 @@ routes.get('/admin/category',categoryCntrl.getCategory);
 routes.get('/admin/customers-list',usersCntrl.getAllUsers);
 
 routes.post('/admin/product',productCntrl.postProducts);
+routes.delete('/admin/product/:id',productCntrl.deleteProductById);
 routes.post('/admin/coupons',couponsCntrl.postCoupons);
 routes.get('/admin/coupons',couponsCntrl.getAllCoupons);
 routes.post('/admin/product-details',productDetailsCntrl.addProductDetails);

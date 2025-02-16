@@ -4,7 +4,8 @@ const Products = require('../models/Products');
 
 module.exports = {
     postProducts:postProducts,
-    getAllProducts:getAllProducts
+    getAllProducts:getAllProducts,
+    deleteProductById:deleteProductById
 }
 
 function postProducts(req,res){
@@ -103,6 +104,39 @@ function getAllProducts(req,res){
             })
         }
     }getAllProducts().then(function(){}).catch(err=>{
+        res.json({
+            code:500,
+            data:null,
+            message:'Internal server error'
+        })
+    })
+}
+
+function deleteProductById(req,res){
+    async function deleteProductById(){
+        try{
+            const isExistingProduct = await Products.findByIdAndDelete(req.params.id);
+            if(isExistingProduct){
+                res.json({
+                    code:200,
+                    data:'',
+                    message:'Product deleted successfully!'
+                })
+            }else{
+                res.json({
+                    code:200,
+                    data:'',
+                    message:'Product Id not found !'
+                })
+            }
+        }catch(err){
+            res.json({
+                code: 400,
+                data: null,
+                message: 'Exception error occurred'
+            })
+        }
+    }deleteProductById().then(function(){}).catch(err=>{
         res.json({
             code:500,
             data:null,
